@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html ng-app="devMtIn">
 
 <head>
   <link href='https://fonts.googleapis.com/css?family=Raleway:400,500,700,600' rel='stylesheet' type='text/css'>
@@ -9,29 +9,30 @@
 	<title>DevMtin</title>
 </head>
 
-<body>
+<body ng-controller="homeCtrl">
 	<div class="l-header">
-		<h1>Your Name</h1>
+		<h1>{{myProfile.name || overWrite}}</h1>
+
 	</div>
   
   <div class="wrapper">  
     <div>
       <h2>Profile</h2>
-      <button class="l-btn l-btn-main">Editing :</button>
+      <button class="l-btn l-btn-main" ng-click="editing = !editing">Editing : {{editing}}</button>
     </div>
 
     <div>      
 
-      <input id="name" type="text" placeholder="Your Name">
+      <input ng-model="myProfile.name" id="name" type="text" placeholder="Your Name" ng-disabled="!editing">
       <br />
 
-      <input id="likes" type="text" placeholder="Likes">
+      <input ng-model="myProfile.like" id="likes" type="text" placeholder="Likes" ng-disabled="!editing">
       <br />
 
-      <input id="favColor" type="text" placeholder="Favorite Color">
+      <input  ng-model="myProfile.color" id="favColor" type="text" placeholder="Favorite Color" ng-disabled="!editing">
       <br />
-      <button class="l-btn l-btn-success">Save</button>
-      <button class="l-btn l-btn-danger">Delete</button>
+      <button class="l-btn l-btn-success" ng-click="saveProfile(myProfile)">Save</button>
+      <button class="l-btn l-btn-danger" ng-click="deleteProfile(myProfile)">Delete</button>
     </div>
   </div>
 
@@ -39,15 +40,16 @@
     <h2>Friends</h2>
 
     <button class="l-btn l-btn-main">Go</button>
-    <input type="text" placeholder="Find Friends">    
-    <div class="friendList">
-      <span class="closeBtn"></span>
-        My Friends
-      <br />
-      <div class="secondConnection friendList">
-        My Second Connections
-      </div>
-    </div>
+    <input ng-model="findFriend.name" type="text" placeholder="Find Friends">
+    <select ng-model="sortReverse" ng-options="option.value as option.display for option in sortOptions"></select>
+    <div class="friendList" ng-repeat="friend in myProfile.friends | filter : findFriend.name | orderBy : 'name' : sortReverse">
+  <span class="closeBtn"></span>
+  {{ friend.name }}
+  <br>
+  <div class="secondConnection friendList">
+    My Second Connections
+  </div>
+</div>
   </div>
   
 	<div id="myModalMask">
@@ -64,7 +66,10 @@
 			</div>
 		</div>
 	</div>
-  
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular.js'></script>
+  <script src= 'app.js'></script>
+  <script src= 'homeCtrl.js'></script>
+  <script src= 'profileService.js'></script>
 </body>
 
 </html>
